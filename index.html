@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estudio con Franduto (esto no puede ser)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #12121f;
+      --accent: #ff75b5;
+      --text: #e4e8ff;
+      --muted: #9ba0c9;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 0;
+    }
+    .counter {
+      margin: 1rem 0;
+      display: flex;
+      gap: 1rem;
+    }
+    button {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: bold;
+    }
+    button:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .box {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      width: min(600px, 95%);
+      background: rgba(255,255,255,0.02);
+    }
+    .number {
+      font-size: 2rem;
+      margin: 0.5rem;
+    }
+    #phrase {
+      font-style: italic;
+      margin-top: 0.5rem;
+      color: var(--muted);
+      min-height: 1.5em;
+    }
+    #time {
+      font-size: 1.2rem;
+      margin-top: 0.4rem;
+    }
+    #theme {
+      color: var(--accent);
+      font-weight: bold;
+    }
+    footer {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <h1>Estudio con Franduto</h1>
+  <h2>Versión “esto no puede ser”</h2>
+
+  <div class="box">
+    <h3>🧠 Tema actual</h3>
+    <input id="topicInput" type="text" placeholder="Ej: Ideales maximales o Derivadas implícitas" style="width:80%;padding:0.4rem;border-radius:5px;border:none;text-align:center;">
+    <p id="theme">(ninguno)</p>
+  </div>
+
+  <div class="box">
+    <h3>✅ Cosas bien / ❌ Cosas mal</h3>
+    <div class="counter">
+      <button id="goodBtn">+1 Cosa bien</button>
+      <button id="badBtn">+1 Cosa mal</button>
+    </div>
+    <div>
+      <span class="number" id="goodCount">0</span> cosas bien —
+      <span class="number" id="badCount">0</span> cosas mal
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>⏰ Cronómetro de sufrimiento</h3>
+    <div id="time">00:00:00</div>
+    <div class="counter">
+      <button id="startBtn">Empezar</button>
+      <button id="pauseBtn">Pausar</button>
+      <button id="resetBtn">Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>💬 Frase motivacional</h3>
+    <p id="phrase">Pulsa el botón si te rindes mentalmente.</p>
+    <button id="newPhraseBtn">Nueva frase</button>
+  </div>
+
+  <footer>
+    <p>Hecho por Diego y Franduto — sin guardar datos, sin sentido común.</p>
+    <p>Esto no puede ser.</p>
+  </footer>
+
+  <script>
+    // Contadores
+    let good = 0, bad = 0;
+    document.getElementById("goodBtn").onclick = () => {
+      good++;
+      document.getElementById("goodCount").textContent = good;
+      maybeCheer();
+    };
+    document.getElementById("badBtn").onclick = () => {
+      bad++;
+      document.getElementById("badCount").textContent = bad;
+      if (bad > good) randomPhrase("Te estás hundiendo como un ideal maximal en un cuerpo finito, inútil.");
+    };
+
+    // Tema actual
+    const topicInput = document.getElementById("topicInput");
+    topicInput.addEventListener("input", () => {
+      const val = topicInput.value.trim();
+      document.getElementById("theme").textContent = val ? "🔥 " + val + " 🔥" : "(ninguno)";
+    });
+
+    // Cronómetro
+    let time = 0;
+    let timer = null;
+    function updateClock() {
+      const h = String(Math.floor(time / 3600)).padStart(2, '0');
+      const m = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
+      const s = String(time % 60).padStart(2, '0');
+      document.getElementById("time").textContent = `${h}:${m}:${s}`;
+    }
+    document.getElementById("startBtn").onclick = () => {
+      if (!timer) timer = setInterval(() => { time++; updateClock(); }, 1000);
+    };
+    document.getElementById("pauseBtn").onclick = () => {
+      clearInterval(timer);
+      timer = null;
+    };
+    document.getElementById("resetBtn").onclick = () => {
+      clearInterval(timer);
+      timer = null;
+      time = 0;
+      updateClock();
+    };
+
+    // Frases motivacionales
+    const phrases = [
+      "Si Z/nZ es cuerpo, tú puedes con esto.",
+      "Kirby te observa y juzga tu procrastinación.",
+      "Las derivadas parciales no te van a morder (de momento).",
+      "Cuando creas que has tocado fondo, JM aún puede preguntar algo peor.",
+      "Cada cosa bien te acerca a no suspender (mentira, pero suena bonito).",
+      "Un ideal maximal al día mantiene al suspenso en la bahía.",
+      "Rafa confía en ti. O eso dice mientras fuma.",
+      "Por favor, callaro’ (Mariángeles te bendice).",
+      "Si sobrevives a las integrales triples, ganas el respeto eterno del universo.",
+      "Tu límite no existe (pero el de la función sí).",
+      "Has hecho más que ayer, lo cual no era difícil.",
+      "El conjunto de tus ganas de estudiar no es denso en ℝ.",
+      "Esto no puede ser, pero sigue estudiando.",
+      "Cuando todo falla, recuerda: siempre puedes decir ‘es evidente’.",
+      "El álgebra es tu enemiga, pero al menos no eres un anillo no conmutativo.",
+      "Si llegas al final de esta sesión, te doy un sticker de Kirby mental.",
+      "No te rindas, que ni el profesor de Física lo hace al enseñar mal.",
+      "No confíes en el gradiente, confía en ti.",
+      "No hay topología que te salve del suspenso si no estudias.",
+      "En el espacio de tus neuronas, la base está incompleta, pero confío en ti."
+    ];
+
+    function randomPhrase(custom) {
+      const phrase = custom || phrases[Math.floor(Math.random() * phrases.length)];
+      document.getElementById("phrase").textContent = phrase;
+    }
+    document.getElementById("newPhraseBtn").onclick = () => randomPhrase();
+
+    // Animación tonta
+    function maybeCheer() {
+      if (good > 0 && good % 5 === 0) {
+        randomPhrase("¡Has llegado a " + good + " cosas bien! A ver si ahora haces algo de verdad.");
+      }
+    }
+  </script>
+</body>
+</html>
